@@ -68,12 +68,13 @@ var Vehicle = function(x, y) {
         
         futureVelocity.mult(lookahead);
         futurePosition.add(futureVelocity);
+        this.seek(futurePosition);
         
-        var desired = p5.Vector.sub(futurePosition, this.position);
-        desired.setMag(this.maxSpeed);
-        var steer = p5.Vector.sub(desired, this.velocity);
-        steer.limit(this.maxForce);
-        this.applyForce(steer);
+        // var desired = p5.Vector.sub(futurePosition, this.position);
+        // desired.setMag(this.maxSpeed);
+        // var steer = p5.Vector.sub(desired, this.velocity);
+        // steer.limit(this.maxForce);
+        // this.applyForce(steer);
      
     }
 
