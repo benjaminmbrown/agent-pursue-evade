@@ -3,8 +3,9 @@ var Vehicle = function(x, y) {
     this.velocity = createVector(0, -2);
     this.position = createVector(x, y);
     this.r = 6;
-    this.maxSpeed = 2;
-    this.maxForce = 0.2;
+    this.maxSpeed = 3;
+    this.maxForce = 0.3;
+    this.mass = 5
 
 
     this.wanderRadius = 19;
@@ -59,25 +60,26 @@ var Vehicle = function(x, y) {
             this.applyForce(steer);
         }
 
+    this.getFuturePosition = function(target){
 
-    this.pursue = function(target) {
         var lookahead = p5.Vector.dist(target.position,this.position)/this.maxSpeed;
         var futurePosition = target.position.copy();
         var futureVelocity = target.velocity.copy();
 
-        
         futureVelocity.mult(lookahead);
         futurePosition.add(futureVelocity);
-        this.seek(futurePosition);
-        
-        // var desired = p5.Vector.sub(futurePosition, this.position);
-        // desired.setMag(this.maxSpeed);
-        // var steer = p5.Vector.sub(desired, this.velocity);
-        // steer.limit(this.maxForce);
-        // this.applyForce(steer);
-     
+
+        return futurePosition;
+
     }
 
+    this.pursue = function(target) {
+        this.seek(this.getFuturePosition(target));
+    }
+ 
+    this.evade = function(target){
+        this.flee(this.getFuturePosition(target));
+    }
 
     this.arrive = function(target) {
         var desired = p5.Vector.sub(target, this.position); //vector pointing FROM loc TO target

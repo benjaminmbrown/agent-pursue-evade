@@ -22,11 +22,12 @@ function draw(){
 	//ellipse(enemy.x,enemy.y, 48,48);
 
 	//vehicle.seek(mouse);
-	pursuer.pursue(evader);
+	pursuer.wander();
 	pursuer.update();
 	pursuer.display();
 
-	evader.wander();
+	evader.evade(pursuer);
+	//evader.wander();
 	evader.update();
 	evader.display();
 
