@@ -5,7 +5,7 @@ var Vehicle = function(x, y) {
     this.r = 6;
     this.maxSpeed = 3;
     this.maxForce = 0.3;
-    this.mass = 5;
+    this.mass = 155;
 
     this.wanderRadius = 19;
     this.wanderDistance = 4;
@@ -38,7 +38,7 @@ var Vehicle = function(x, y) {
         displacement.mult(this.wanderRadius);
 
         this.setAngle(displacement, this.wanderAngle);
-        this.wanderAngle += random(-1, 1);
+        this.wanderAngle += random(-.8, .8);
 
         this.wanderForce = this.wanderCenter.add(displacement);
         this.wanderForce.limit(this.maxForce);
@@ -87,6 +87,32 @@ var Vehicle = function(x, y) {
         steer.limit(this.maxForce);
         this.applyForce(steer);
     }
+
+    this.boundaries = function() {
+
+        var desired = null;
+        var d = 25;
+
+        if (this.position.x < d) {
+            desired = createVector(this.maxspeed, this.velocity.y);
+        } else if (this.position.x > width - d) {
+            desired = createVector(-this.maxspeed, this.velocity.y);
+        }
+
+        if (this.position.y < d) {
+            desired = createVector(this.velocity.x, this.maxspeed);
+        } else if (this.position.y > height - d) {
+            desired = createVector(this.velocity.x, -this.maxspeed);
+        }
+
+        if (desired !== null) {
+            desired.normalize();
+            desired.mult(this.maxspeed);
+            var steer = p5.Vector.sub(desired, this.velocity);
+            steer.limit(this.maxforce);
+            this.applyForce(steer);
+        }
+    };
 
     this.update = function() {
         this.velocity.add(this.acceleration);
