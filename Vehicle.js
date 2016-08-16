@@ -3,7 +3,7 @@ var Vehicle = function(x, y) {
     this.velocity = createVector(0, -2);
     this.position = createVector(x, y);
     this.r = 6;
-    this.maxSpeed = 4;
+    this.maxSpeed = 2;
     this.maxForce = 0.2;
 
 
@@ -59,14 +59,16 @@ var Vehicle = function(x, y) {
             this.applyForce(steer);
         }
 
-    this.pursue = function(target) {
-        var lookahead = p5.Vector.dist(target,this.position)/this.maxSpeed;
-        console.log(lookahead);
-        var futurePosition = target.copy();
-        console.log(futurePosition);
-        //futureposittion = t.position + t.velocity * lookahead
-        //var futurePosition = 
 
+    this.pursue = function(target) {
+        var lookahead = p5.Vector.dist(target.position,this.position)/this.maxSpeed;
+        var futurePosition = target.position.copy();
+        var futureVelocity = target.velocity.copy();
+
+        
+        futureVelocity.mult(lookahead);
+        futurePosition.add(futureVelocity);
+        
         var desired = p5.Vector.sub(futurePosition, this.position);
         desired.setMag(this.maxSpeed);
         var steer = p5.Vector.sub(desired, this.velocity);
@@ -114,10 +116,7 @@ var Vehicle = function(x, y) {
 
     this.display = function() {
         var theta = this.velocity.heading() + PI / 2;
-        console.log("heading:", this.velocity.heading());
 
-        var wanderX = this.wanderRadius * cos(this.wanderTheta);
-        var wanderY = this.wanderRadius * sin(this.wanderTheta);
 
         fill(127);
         stroke(200);

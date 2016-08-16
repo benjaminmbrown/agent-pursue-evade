@@ -18,9 +18,11 @@ function draw(){
 	fill(127);
 	stroke(200);
 	strokeWeight(2);
-	
-	
-	pursuer.pursue(evader.position);
+	//ellipse(mouse.x,mouse.y, 48,48);
+	//ellipse(enemy.x,enemy.y, 48,48);
+
+	//vehicle.seek(mouse);
+	pursuer.pursue(evader);
 	pursuer.update();
 	pursuer.display();
 
