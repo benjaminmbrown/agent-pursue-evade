@@ -5,16 +5,13 @@ var Vehicle = function(x, y) {
     this.r = 6;
     this.maxSpeed = 3;
     this.maxForce = 0.3;
-    this.mass = 5
-
+    this.mass = 5;
 
     this.wanderRadius = 19;
     this.wanderDistance = 4;
     this.wanderCenter = 0;
     this.wanderAngle = 0;
     this.wanderForce = createVector();
-
-
 
     this.seek = function(target) {
         var desired = p5.Vector.sub(target, this.position);
@@ -27,7 +24,6 @@ var Vehicle = function(x, y) {
     this.setAngle = function(vector, value) {
         vector.x = cos(value) * vector.mag();
         vector.y = sin(value) * vector.mag();
-
     }
 
     this.wander = function() {
@@ -51,18 +47,17 @@ var Vehicle = function(x, y) {
 
     }
 
-        //inverse of seek 
     this.flee = function(target) {
-            var desired = p5.Vector.sub(this.position, target);
-            desired.setMag(1);
-            var steer = p5.Vector.sub(desired, this.velocity);
-            steer.limit(this.maxForce);
-            this.applyForce(steer);
-        }
+        var desired = p5.Vector.sub(this.position, target);
+        desired.setMag(1);
+        var steer = p5.Vector.sub(desired, this.velocity);
+        steer.limit(this.maxForce);
+        this.applyForce(steer);
+    }
 
-    this.getFuturePosition = function(target){
+    this.getFuturePosition = function(target) {
 
-        var lookahead = p5.Vector.dist(target.position,this.position)/this.maxSpeed;
+        var lookahead = p5.Vector.dist(target.position, this.position) / this.maxSpeed;
         var futurePosition = target.position.copy();
         var futureVelocity = target.velocity.copy();
 
@@ -70,47 +65,34 @@ var Vehicle = function(x, y) {
         futurePosition.add(futureVelocity);
 
         return futurePosition;
-
     }
 
     this.pursue = function(target) {
         this.seek(this.getFuturePosition(target));
     }
- 
-    this.evade = function(target){
+
+    this.evade = function(target) {
         this.flee(this.getFuturePosition(target));
     }
 
     this.arrive = function(target) {
-        var desired = p5.Vector.sub(target, this.position); //vector pointing FROM loc TO target
+        var desired = p5.Vector.sub(target, this.position);
         var distance = desired.mag();
-        //damping within 100 pixels
-
-
         if (distance < 100) {
-            //set magnitude according to how close we are
             var scaledSpeed = map(distance, 0, 100, 0, this.maxSpeed);
             desired.setMag(scaledSpeed);
         } else { desired.setMag(this.maxSpeed) }
 
-        //Steer - desired minus velocity
-
-        var steer = p5.Vector.sub(desired, this.velocity); //steer = desired-velocity
+        var steer = p5.Vector.sub(desired, this.velocity);
         steer.limit(this.maxForce);
         this.applyForce(steer);
-
-
     }
 
-    this.update = function() { //Standard Euler integration motion
-
+    this.update = function() {
         this.velocity.add(this.acceleration);
         this.velocity.limit(this.maxSpeed);
         this.position.add(this.velocity);
         this.acceleration.mult(0);
-
-        //TODO: max force and speed vary based on life
-
     }
 
     this.applyForce = function(force) {
@@ -119,8 +101,6 @@ var Vehicle = function(x, y) {
 
     this.display = function() {
         var theta = this.velocity.heading() + PI / 2;
-
-
         fill(127);
         stroke(200);
         strokeWeight(1);
@@ -132,15 +112,6 @@ var Vehicle = function(x, y) {
         vertex(-this.r, this.r * 2);
         vertex(this.r, this.r * 2);
         endShape(CLOSE);
-
         pop();
-
-
-
     }
-
-
-
-
-
 }
